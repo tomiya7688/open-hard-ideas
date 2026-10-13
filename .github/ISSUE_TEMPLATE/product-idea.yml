@@ -1,0 +1,101 @@
+name: Hardware product idea
+description: 新しいハードウェア製品案をLv0として提案する
+title: "[Idea] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        このIssueはLv0の製品案です。
+        分からない項目は推測せず「未定」または「要確認」と書いてください。
+        仕様が固まるまではSrc/へ製品ディレクトリを作りません。
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 一言でいうと
+      description: 専門用語をできるだけ避け、この製品が何をするものか1〜3文で書いてください。
+      placeholder: USBメモリをSATAドライブとしてPCから使えるようにする変換器。
+    validations:
+      required: true
+
+  - type: textarea
+    id: capabilities
+    attributes:
+      label: 何ができるのか
+      description: 利用者がこの製品を使うと何を実現できるかを書いてください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: target-users
+    attributes:
+      label: ターゲットユーザー
+      description: 誰が使う製品かを書いてください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 解決する問題 / Use case
+      description: 現在の手間や制約と、この製品でどう改善するかを書いてください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: usage-example
+    attributes:
+      label: 利用例
+      description: 具体的な使用場面を書いてください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: interfaces
+    attributes:
+      label: 入出力・接続
+      description: 分かる範囲でコネクタ、規格、電源、入力、出力を書いてください。
+      placeholder: |
+        入力:
+        出力:
+        電源:
+        コネクタ:
+        対応規格:
+    validations:
+      required: false
+
+  - type: textarea
+    id: development-cost
+    attributes:
+      label: 開発費用予想
+      description: 精密な見積りは不要です。分からなければ費用を左右する要因を書いてください。
+      placeholder: |
+        試作部品費:
+        試作製造費:
+        開発設備・ツール費:
+        外注費:
+        工数:
+        合計概算:
+        前提:
+        見積りの確度: 低 / 中 / 高
+    validations:
+      required: true
+
+  - type: textarea
+    id: unresolved
+    attributes:
+      label: 未決事項
+      description: Lv1へ上げる前に決める必要がある仕様を書いてください。
+      placeholder: |
+        - 要確認:
+        - 要確認:
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足・既存製品との差
+      description: 似た製品、逆方向の製品、技術調査などがあれば書いてください。
+    validations:
+      required: false
