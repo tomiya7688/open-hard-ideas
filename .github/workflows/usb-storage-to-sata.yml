@@ -1,0 +1,19 @@
+name: USB Storage to SATA reference core
+
+on:
+  push:
+    paths:
+      - "designs/usb-storage-to-sata/**"
+      - ".github/workflows/usb-storage-to-sata.yml"
+  pull_request:
+    paths:
+      - "designs/usb-storage-to-sata/**"
+      - ".github/workflows/usb-storage-to-sata.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test
+        run: make -C designs/usb-storage-to-sata test
