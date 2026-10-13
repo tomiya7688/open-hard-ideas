@@ -10,24 +10,40 @@
 
 | Level | 状態 | 成果物 |
 | --- | --- | --- |
-| **Lv0 — Idea / Spec Draft** | アイデアから仕様を固めている途中 | Issue上の議論・要件・用途 |
-| **Lv1 — Specified** | 仕様が固まった | 製品README |
-| **Lv2 — Design / Implementation** | 設計または実装が存在する | 設計図、回路図、KiCadデータ、C/HDL等のソースのいずれか |
+| **Lv0 — Idea / Spec Draft** | アイデアから仕様を固めている途中 | Issue上の議論・要件・技術調査 |
+| **Lv1 — Specified** | 主要仕様が確定し、設計へ入れる | 製品README / 仕様書 |
+| **Lv2 — Design / Implementation** | 設計または実装が一通り成立している | 設計図、回路図、KiCadデータ、組み込みソース、HDL等 |
 | **Lv3 — Open Simulation Verified** | シミュレーション段階が完了 | 再現可能なOSSシミュレーションとPASS結果 |
 
-Levelは目標ではなく、**現在到達している最高レベル** を表します。
+Levelは「何かファイルが存在するか」ではなく、**現在どこまで完成しているか** を表します。
+
+技術検証用の断片コード、スパイク、未完成の回路図などは、次のLevelへ昇格する根拠にはしません。
 
 ### Lv0 — Idea / Spec Draft
 
-思いついた案はまず Issue にします。
+思いついた案はまずIssueにします。
 
-用途、必要なI/O、期待動作、制約、既存製品との差などを議論し、仕様を固めます。
+用途、必要なI/O、期待動作、制約、既存製品との差などを議論し、製品仕様を固めます。
 
-Lv0ではまだ `Src/` に製品ディレクトリを作る必要はありません。
+この段階では技術調査や試作コードを書いて構いませんが、それらは仕様・設計の完成を意味しません。
+
+**Lv0では原則として `Src/` に製品を設置しません。**
 
 ### Lv1 — Specified
 
-何を作るのか、どのように振る舞うのかという仕様が固まった段階です。
+製品の主要仕様が固まり、実装者がREADMEを読んで、重要な仕様を勝手に決め足さず設計へ入れる状態です。
+
+少なくとも、その製品で重要な項目について次が決まっていることを目安にします。
+
+- 目的 / Use case
+- 入出力インターフェース
+- 対応規格・世代
+- 電源条件
+- 必須機能
+- 対応範囲
+- 非対応範囲
+- エラー時の基本動作
+- 実機で満たすべき受け入れ条件
 
 この時点で、
 
@@ -41,18 +57,18 @@ READMEはその製品の仕様書兼入口です。
 
 ### Lv2 — Design / Implementation
 
-製品READMEに加えて、**設計図または実装ソースの少なくとも一方** が存在する段階です。
+Lv1の仕様を満たすための設計または実装が、**設計成果物として一通り成立している**段階です。
 
 例:
 
-- ブロック図
-- 回路図
-- KiCad等のEDAデータ
-- BOMや主要部品選定
-- FPGA / HDL
-- MCU firmware
-- C / C++等の組み込みコード
-- 機構設計データ
+- 回路図が一通り完成している
+- KiCad等のEDAデータが設計として成立している
+- 主要部品と接続が決定している
+- FPGA / HDLの主要実装が完成している
+- MCU firmware / 組み込みコードの主要機能が実装されている
+- 機構設計が一通り完成している
+
+部分的なreference implementationや技術スパイクだけではLv2にしません。
 
 Lv2へ昇格したら、製品ディレクトリごと移動します。
 
@@ -64,7 +80,9 @@ Src/lv2/<product-name>/
 
 ### Lv3 — Open Simulation Verified
 
-主要な期待動作について、OSSのシミュレーション環境で検証が完了した段階です。
+Lv2の設計について、主要な期待動作のシミュレーションが完了した段階です。
+
+OSSのシミュレーション環境で第三者が検証を再現でき、PASS / FAILを確認できる状態を目標とします。
 
 Lv3へ昇格したら、
 
@@ -80,7 +98,7 @@ Src/lv3/<product-name>/
 
 ## Repository layout
 
-`Src` という名前ですが、ここでいう source はソフトウェアソースだけを意味しません。
+`Src` という名前ですが、software sourceだけを意味しません。
 
 各製品を再現・検討するための一次成果物をまとめて置きます。
 
@@ -107,6 +125,8 @@ Src/
 製品は原則として **現在のLevelのディレクトリに1つだけ存在** させます。  
 昇格時にはコピーではなくディレクトリごと移動します。
 
+Lv0の案はIssue上に置き、仕様確定後に初めて `Src/lv1/` へ入れます。
+
 ## Product README
 
 Lv1以上の各製品にはREADMEを置きます。
@@ -118,7 +138,8 @@ Lv1以上の各製品にはREADMEを置きます。
 - Summary
 - Use case
 - Interface / expected behavior
-- 仕様
+- 確定した仕様
+- 対応範囲 / 非対応範囲
 - 既知の制約
 - 現在ある設計・実装
 - 次のLevelへ上がるために不足しているもの
@@ -178,16 +199,12 @@ GitHub Actions等で自動実行できる場合は、
 1. 欲しいハードウェアをIssueにする — **Lv0**
 2. Issueで用途・仕様を固める
 3. 仕様が固まったら `Src/lv1/<product>/README.md` を作る — **Lv1**
-4. 設計図または実装ソースができたら `Src/lv2/` へ移動 — **Lv2**
+4. 設計または実装が一通り成立したら `Src/lv2/` へ移動 — **Lv2**
 5. OSSシミュレーションが完了したら `Src/lv3/` へ移動 — **Lv3**
 
-## First product
+## Current ideas
 
-現在の最初の製品案:
-
-- [#1 USB Mass Storage → SATA Device Bridge](https://github.com/tomiya7688/open-hard-ideas/issues/1)
-- Current Level: **Lv2**
-- Product directory: `Src/lv2/usb-storage-to-sata/`
+- [#1 USB Mass Storage → SATA Device Bridge](https://github.com/tomiya7688/open-hard-ideas/issues/1) — **Lv0**
 
 ---
 
